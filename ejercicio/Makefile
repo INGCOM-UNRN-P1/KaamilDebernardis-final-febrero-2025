@@ -4,17 +4,6 @@ CC = gcc
 # Opciones de compilación
 CFLAGS = -Wall -Wextra -pedantic -g
 
-# Nombres de las librerías (sin el prefijo lib y la extensión .a)
-LIB_NAME = libreria
-
-# Directorios de las librerías generados a partir de los nombres
-LIB_DIR = $(addprefix ../,$(LIB_NAME))
-
-# Archivos de las librerías
-LIBRARY = $(addprefix -l,$(LIB_NAME))
-LIBRARY_DIRS = $(addprefix -L,$(LIB_DIR))
-INCLUDE_DIRS = $(addprefix -I,$(LIB_DIR))
-
 # Archivos comunes (código fuente y cabeceras)
 SRCS = ejercicio.c
 HDRS = ejercicio.h
@@ -34,16 +23,16 @@ all: $(PROG_TARGET) $(TEST_TARGET)
 
 # Compilar el programa principal
 $(PROG_TARGET): $(PROG_OBJS) $(SRCS:.c=.o)
-	$(CC) $(CFLAGS) -o $@ $(PROG_OBJS) $(SRCS:.c=.o) $(LIBRARY_DIRS) $(LIBRARY)
+	$(CC) $(CFLAGS) -o $@ $(PROG_OBJS) $(SRCS:.c=.o)
 
 # Compilar el ejecutable de pruebas
 $(TEST_TARGET): $(TEST_OBJS) $(SRCS:.c=.o)
-	$(CC) $(CFLAGS) -o $@ $(TEST_OBJS) $(SRCS:.c=.o) $(LIBRARY_DIRS) $(LIBRARY)
+	$(CC) $(CFLAGS) -o $@ $(TEST_OBJS) $(SRCS:.c=.o)
 
 # Regla genérica para compilar archivos .o a partir de .c
 %.o: %.c $(HDRS)
 	@echo "Compilando $<"
-	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c $<
+	$(CC) $(CFLAGS) -c $<
 
 # Ejecutar el programa principal
 .PHONY: run

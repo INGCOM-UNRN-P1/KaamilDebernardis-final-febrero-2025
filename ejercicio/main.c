@@ -8,20 +8,16 @@
 
 #include "ejercicio.h"
 
-#define LARGO_MAXIMO 100000
-
 int main()
 {
-    char cadena[LARGO_MAXIMO];
     int posicion_error = 0;
     
-    printf("Ingresá la cadena, así te digo si está balanceada o no\n");
-    scanf("%s", cadena);
+    FILE *cadena = fopen("archivo.txt", "r");
     
-    int resultado = verificador_balanceado(cadena, &posicion_error);
-    
-    if (resultado != -1)
+    if (cadena != NULL)
     {
+        int resultado = verificador_balanceado(cadena, &posicion_error);
+        
         if (resultado == 1)
         {
             printf("La cadena está balanceada\n");
@@ -29,21 +25,37 @@ int main()
         else if (resultado == 0)
         {
             printf("La cadena no está balanceada. Se rompió el balanceo en la posición %d\n", posicion_error);
-            printf("%s\n", cadena);
-            for (int i=0; i<posicion_error; i++)
+            
+            rewind(cadena);
+            
+            char contenido[1024] = {0};
+            size_t bytes_leidos = fread(contenido, 1, sizeof(contenido) - 1, cadena);
+            if (bytes_leidos > 0)
             {
-                printf(" ");
+                contenido[bytes_leidos] = '\0';
+                printf("%s\n", contenido);
+                
+                for (int i = 0; i < posicion_error; i++)
+                {
+                    printf(" ");
+                }
+                printf("^\n");
             }
-            printf("^");
         }
         else if (resultado == 2)
         {
-            printf("No hay nada que pueda estar o no estar balanceado, ¿qué querés que te diga?\n");
+            printf("No hay nada que pueda estar o no estar balanceado\n");
         }
+        else
+        {
+            printf("Error al verificar el balanceo\n");
+        }
+        
+        fclose(cadena);
     }
     else
     {
-        printf("Error al leer cadena, su valor es nulo\n");
+        printf("No se pudo leer el archivo\n");
     }
     
     return 0;

@@ -5,16 +5,90 @@
 #ifndef EJERCICIO_H
 #define EJERCICIO_H
 
+#include <stdio.h>
+
 /**
- * Verifica si una cadena de caracteres tiene los paréntesis, llaves y corchetes balanceados.
- * @param cadena es la cadena de caracteres a verificar.
- * @param posicion_error es el puntero donde se almacena la posición del primer error de desbalanceo.
- * @returns 1 si los paréntesis, llaves y corchetes están balanceados.
- *          0 si hay un desbalanceo en alguno de los símbolos.
- *          2 si no hay ningún símbolo para balancear.
- * Precondiciones: `cadena` es una cadena de caracteres que no puede ser nula y tiene que terminar en \0.
- * Postcondiciones: Si la cadena no está balanceada, posicion_error dice la posición del primer "error".
+ * Estructura para representar un nodo en la pila
  */
-int verificador_balanceado(char *cadena, int *posicion_error);
+typedef struct Nodo
+{
+    char simbolo;
+    int posicion;
+    struct Nodo *siguiente;
+} Nodo;
+
+/**
+ * Estructura para representar la pila
+ */
+typedef struct
+{
+    Nodo *tope;
+    int tamano;
+} Pila;
+
+/**
+ * Crea una nueva pila vacía
+ * 
+ * @return Puntero a la nueva pila
+ */
+Pila* crear_pila();
+
+/**
+ * Libera la memoria utilizada por la pila
+ * 
+ * @param pila Pila a liberar
+ */
+void liberar_pila(Pila *pila);
+
+/**
+ * Añade un símbolo a la pila
+ * 
+ * @param pila Pila donde añadir
+ * @param simbolo Símbolo a añadir
+ * @param posicion Posición del símbolo en el archivo
+ * @return 1 si se añadió correctamente, 0 en caso de error
+ */
+int apilar(Pila *pila, char simbolo, int posicion);
+
+/**
+ * Elimina el símbolo del tope de la pila
+ * 
+ * @param pila Pila de donde eliminar
+ * @return 1 si se eliminó correctamente, 0 si la pila está vacía
+ */
+int desapilar(Pila *pila);
+
+/**
+ * Obtiene el símbolo del tope de la pila sin eliminarlo
+ * 
+ * @param pila Pila a consultar
+ * @return El símbolo del tope, o '\0' si la pila está vacía
+ */
+char tope(Pila *pila);
+
+/**
+ * Obtiene la posición del símbolo en el tope de la pila
+ * 
+ * @param pila Pila a consultar
+ * @return La posición del símbolo del tope, o -1 si la pila está vacía
+ */
+int tope_posicion(Pila *pila);
+
+/**
+ * Verifica si la pila está vacía
+ * 
+ * @param pila Pila a verificar
+ * @return 1 si está vacía, 0 si no
+ */
+int esta_vacia(Pila *pila);
+
+/**
+ * Verifica si los símbolos de agrupación ( ), { }, [ ] están balanceados en un archivo
+ * 
+ * @param archivo Archivo a verificar
+ * @param posicion_error Si hay error, guarda la posición donde se encontró
+ * @return 0 si no está balanceado, 1 si está balanceado, 2 si no hay símbolos
+ */
+int verificador_balanceado(FILE *archivo, int *posicion_error);
 
 #endif
